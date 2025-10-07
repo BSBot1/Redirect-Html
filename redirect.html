@@ -2,43 +2,50 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Redirect with Save</title>
+<title>Redirect with Save Menu</title>
 <style>
-  #menu {
+  #saveURL {
     position: fixed;
-    top: 10px;
-    right: 10px;
+    top: 12px;
+    right: 12px;
     background: #007aff;
-    color: white;
-    padding: 10px 15px;
+    color: #fff;
+    padding: 8px 14px;
     border-radius: 8px;
     font-family: -apple-system, sans-serif;
+    font-size: 16px;
     cursor: pointer;
-    z-index: 9999;
+    z-index: 999999;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
   }
 </style>
 </head>
 <body>
-
 <script>
   const params = new URLSearchParams(window.location.search);
   const target = params.get("to");
+
   if (target) {
     window.location.href = target;
   }
 
-  // 🔁 Menü erzeugen, sobald die Seite geladen ist
-  window.onload = () => {
-    const btn = document.createElement("div");
-    btn.id = "menu";
-    btn.innerText = "💾 Save URL";
-    btn.onclick = () => {
-      const current = encodeURIComponent(window.location.href);
-      window.location.href = `shortcuts://run-shortcut?name=SaveURL&input=${current}`;
-    };
-    document.body.appendChild(btn);
-  };
+  // Trick: alle paar Sekunden prüfen, ob wir auf der Zielseite sind und dort Menü einfügen
+  const injectMenu = setInterval(() => {
+    try {
+      if (!document.getElementById("saveURL")) {
+        const btn = document.createElement("div");
+        btn.id = "saveURL";
+        btn.innerText = "💾 Save URL";
+        btn.onclick = () => {
+          const current = encodeURIComponent(window.location.href);
+          window.location.href = `shortcuts://run-shortcut?name=SaveURL&input=${current}`;
+        };
+        document.body.appendChild(btn);
+      }
+    } catch (e) {
+      // Ignorieren, falls DOM noch nicht bereit ist
+    }
+  }, 2000);
 </script>
-
 </body>
 </html>
