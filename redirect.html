@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Redirect</title>
+<script>
+  // Schritt 1: Ziel-URL aus dem Parameter holen
+  const params = new URLSearchParams(window.location.search);
+  const target = params.get("to");
+
+  if (target) {
+    // Schritt 2: Sofort weiterleiten
+    window.location.replace(target);
+  }
+
+  // Schritt 3: Wenn die Seite verlassen wird, Shortcut starten und URL zurückgeben
+  window.addEventListener("pagehide", () => {
+    const lastURL = encodeURIComponent(window.location.href);
+    window.location.href = `shortcuts://run-shortcut?name=ReturnFromWeb&input=${lastURL}`;
+  });
+</script>
+</head>
+<body>
+  <p>Redirecting…</p>
+</body>
+</html>
